@@ -1,0 +1,83 @@
+<html>
+<head>
+<script>
+	String.prototype.regexIndexOf = function (regex, startpos) {
+		var indexOf = this.substring(startpos || 0).search(regex);
+		return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+	}
+// Split into pages
+function splitPages(text) {
+	let pageIndexes = [];
+	for (let i = text.regexIndexOf(/PAGE[S]{0,1} /); i !== -1; i = text.regexIndexOf(/PAGE[S]{0,1} /, i + 1)) {
+		pageIndexes.push(i);
+	}
+	let nextIssueBlurb = text.regexIndexOf(/NEXT ISSUE/i);
+	if (nextIssueBlurb > -1) {
+		pageIndexes.push(nextIssueBlurb);
+	}
+	let pages = pageIndexes.map((pageIndex, arrIndex) => {
+	    let nextIndex = arrIndex === pageIndexes.length - 1 ? text.length : pageIndexes[arrIndex + 1];
+	    return text.substring(pageIndex, nextIndex);
+	});
+	return pages;
+}
+
+// Split into panels
+function splitPanels(text) {
+	let panelIndexes = [0];
+	for (let i = text.regexIndexOf(/PANEL[S]{0,1} /); i !== -1; i = text.regexIndexOf(/PANEL[S]{0,1} /, i + 1)) {
+		panelIndexes.push(i);
+	}
+	let panels = panelIndexes.map((panelIndex, arrIndex) => {
+		let nextIndex = arrIndex === panelIndexes.length - 1 ? text.length : panelIndexes[arrIndex + 1];
+		let panelText = text.substring(panelIndex, nextIndex).trim();
+		// If this is the 'first' panel (e.g. the page label), return panelText unmolested
+		if (!panelIndex) return panelText.trim().replace(/(PAGE[S]{0,1} .*)/g, '**$1**');
+		// Otherwise, we want to append > before any newlines
+		panelText = panelText.split('\n').map(text => '> ' + text.trim()).join('\n').trim().replace(/(PANEL.*)/g, '*$1*');
+	   	return panelText;
+	});
+	return panels;
+}
+
+// Format text
+
+function formatText(text) {
+	let pages = splitPages(text).map(page => {
+		let panels = splitPanels(page);
+		return panels.join('\n\n');
+	});
+	let toReturn = pages.join('\n\n');
+	// Replace the swear words that the board does not allow
+	toReturn = toReturn.replace(/fucked/g, '■■■■ed');
+	toReturn = toReturn.replace(/bullshit/g, 'bull■■■■');
+	toReturn = toReturn.replace(/shitty/g, '■■■■ty');
+	toReturn = toReturn.replace(/cock/g, 'co[spoiler][/spoiler]ck');
+	return toReturn;
+}
+function updateText() {
+	let textArea = document.getElementById("scriptText");
+	let text = textArea.value;
+	let newText = formatText(text);
+	textArea.value = newText;
+}
+</script>
+<style>
+textarea {
+  width: 400px;
+  height:500px;
+}
+</style>
+</head>
+<body>
+<div>
+        <div>
+            <textarea id='scriptText'></textarea>
+        </div>
+        <div>
+          <button type='button' onClick='updateText()'>
+          Format
+        </button>
+        </div>
+</body>
+</html>
