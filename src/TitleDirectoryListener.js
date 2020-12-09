@@ -2,7 +2,7 @@ let React = require("react");
 let {
 	Link,
 } = require("react-router-dom");
-let Immutable = require("Immutable");
+let Immutable = require("immutable");
 let { getUnixTime, parseISO } = require('date-fns');
 let { connect } = require("react-redux");
 

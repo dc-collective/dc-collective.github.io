@@ -36,7 +36,7 @@ class Issue extends React.Component {
 
 		// Get the raw values
 		let { number, title: subtitle, date, author, content, editor } = post;
-		
+
 		// Now format the values
 		let formattedNumber = isNaN(number) ? number : numbersToWords.toWords(number).toUpperCase();
 		let isoDate = date ? parseISO(date) : undefined;
@@ -46,7 +46,7 @@ class Issue extends React.Component {
 		// let { title, number, subtitle, date, author, content } = this.props;
 		return (
 			<div>
-				{this.state.mode === 'view' ? <button className="btn" onClick={() => {
+				{/*this.state.mode === 'view' ? <button className="btn" onClick={() => {
 					posters.updateWipIssue({
 						series: seriesDict[titleId] ? seriesDict[titleId]._id : undefined,
 						number,
@@ -57,7 +57,7 @@ class Issue extends React.Component {
 						editor
 					});
 					this.setState({ mode: 'edit' });
-				}}>Edit</button> : <button className="btn" onClick={() => this.setState({ mode: 'view' })}>Cancel</button>}
+				}}>Edit</button> : <button className="btn" onClick={() => this.setState({ mode: 'view' })}>Cancel</button>*/}
 				{this.state.mode === 'view' ? <IssueContent
 					title={title}
 					formattedNumber={formattedNumber}

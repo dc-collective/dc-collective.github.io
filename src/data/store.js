@@ -15,6 +15,7 @@ function reducer(state = Immutable.fromJS({
 	switch(type) {
 		case 'APP_INIT': {
 			let newState = state.withMutations(state => {
+				console.log('action', action);
 				let {
 					users,
 					titles,

@@ -5,19 +5,68 @@ let endpoint = 'https://dcw-collective.herokuapp.com';
 let store = require('./store').default;
 let Immutable = require("immutable");
 
+// Yes, this is a dumb way to do this, but it'll work until I fix the DB connector
+let titlesArr = require('./db/titles.json');
+let categoriesArr = require('./db/categories.json');
+let issuesArr = require('./db/issues.json');
+let usersArr = require('./db/users.json');
+
+let titles = {};
+let categories = {};
+let issues = {};
+let users = {};
+
+titlesArr.forEach(title => {
+	titles[title._id] = title;
+});
+categoriesArr.forEach(category => {
+	categories[category._id] = category;
+});
+issuesArr.forEach(issue => {
+	issues[issue._id] = issue;
+});
+usersArr.forEach(user => {
+	user[user._id] = user;
+});
+
 function getter(type) {
 	return new Promise((resolve, reject) => {
-		let url = endpoint + '/' + type;
-		fetch(url)
-			.then(response => {
-				if(!response.ok) {
-					console.error('Non-ok response. Response was', response);
-				} else {
-					return response.json();
-				}
-			})
-			.then(resolve)
-			.catch(reject);
+		switch(type) {
+			case 'init': {
+				return resolve({
+					titles,
+					categories,
+					issues,
+					users
+				})
+			}
+			case 'titles': {
+				return resolve(titles);
+			}
+			case 'categories': {
+				return resolve(categories);
+			}
+			case 'issues': {
+				return resolve(issues);
+			}
+			case 'users': {
+				return resolve(users);
+			}
+			default: {
+				return reject(new Error('Unrecognized type ' + type));
+			}
+		}
+		// let url = endpoint + '/' + type;
+		// fetch(url)
+		// 	.then(response => {
+		// 		if(!response.ok) {
+		// 			console.error('Non-ok response. Response was', response);
+		// 		} else {
+		// 			return response.json();
+		// 		}
+		// 	})
+		// 	.then(resolve)
+		// 	.catch(reject);
 	});
 }
 
