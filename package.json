@@ -22,7 +22,7 @@
     "browserify": "^17.0.0",
     "date-fns": "^2.14.0",
     "immutable": "^4.0.0-rc.12",
-    "markdown-it": "^11.0.0",
+    "markdown-it": "^12.3.2",
     "markdown-it-attrs": "^3.0.3",
     "markdown-it-bracketed-spans": "^1.0.1",
     "markdown-it-container": "^3.0.0",
